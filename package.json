@@ -1,0 +1,35 @@
+{
+	"name": "vuepress-plugin-entity-pages",
+	"version": "1.0.0",
+	"description": "",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"prepublish": "npm run build",
+		"build": "tsc --skipLibCheck",
+		"test": "./node_modules/.bin/_mocha 'tests/**/*.test.ts'"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/iantalent/vuepress-plugin-entity-pages.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/iantalent/vuepress-plugin-entity-pages/issues"
+	},
+	"homepage": "https://github.com/iantalent/vuepress-plugin-entity-pages#readme",
+	"dependencies": {},
+	"devDependencies": {
+		"@testdeck/mocha": "^0.2.0",
+		"@types/chai": "^4.3.0",
+		"chai": "^4.3.4",
+		"mocha": "^9.1.4",
+		"nyc": "^15.1.0",
+		"ts-node": "^10.4.0",
+		"typescript": "^4.5.4",
+		"vuepress": "^1.5.3",
+		"markdown-generator": "git://github.com/iantalent/markdown-generator.git",
+		"vuepress-plugin-custom-pages": "git://github.com/iantalent/vuepress-plugin-custom-pages.git"
+	}
+}
