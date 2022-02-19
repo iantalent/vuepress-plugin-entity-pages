@@ -83,8 +83,7 @@ export class SimpleEntityParser implements EntityParser
 		if(!name)
 			throw new Error('Entity should have name');
 		
-		const page = new SimplePage(name, path),
-			frontMatter = {} as Frontmatter;
+		const frontMatter = {} as Frontmatter;
 		
 		if(entityCandidate.lang)
 			frontMatter.lang = entityCandidate.lang;
@@ -106,6 +105,8 @@ export class SimpleEntityParser implements EntityParser
 			if(Array.isArray(entityCandidate.meta.additional))
 				frontMatter.meta = entityCandidate.meta.additional;
 		}
+		
+		const page = new SimplePage(name, path, frontMatter);
 		
 		if(entityCandidate.description)
 			page.add(new Paragraph(entityCandidate.description));
