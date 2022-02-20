@@ -1,10 +1,10 @@
-import {Page, SimplePage} from "vuepress-plugin-custom-pages";
-import {Fragment, Paragraph} from "markdown-generator";
-import {Frontmatter} from "vuepress-plugin-custom-pages";
+import {Frontmatter, Page, SimplePage} from "vuepress-plugin-custom-pages";
+import {Fragment, Heading, Paragraph, UnorderedList} from "markdown-generator";
+import {PathMessageResolver} from "./messages";
 
 export interface EntityParser
 {
-	parse(entityCandidate: any, path: string): Page
+	parse(entityCandidate: any, path: string, messageResolver: PathMessageResolver): Page
 }
 
 export type EntitySchema = {
@@ -53,12 +53,39 @@ export type FieldsGroup = {
 	fields: Array<Field>
 }
 
-function parseFields(fields: Array<Field>, headingLevel: number = 2): Array<Fragment>
+function parseField(field: Field, messageResolver: PathMessageResolver, headingLevel: number): Array<Fragment>
 {
-	return []
+	const fragments: Array<Fragment> = [
+		new Heading(field.name, headingLevel)
+	];
+	
+	const fieldList = new UnorderedList();
+	
+	if(field.type)
+		fieldList.add(messageResolver.resolve('fieldType') + ' ' + '`' + field.type + '`');
+	
+	if(fieldList.hasItems())
+		fragments.push(fieldList);
+	
+	if(field.description)
+		fragments.push(new Paragraph(field.description));
+	
+	return fragments;
 }
 
-function parseGroups(groups: Array<FieldsGroup>): Array<Fragment>
+function parseFields(fields: Array<Field>, messageResolver: PathMessageResolver, headingLevel: number = 2): Array<Fragment>
+{
+	const fragments: Array<Fragment> = [];
+	
+	fields.forEach(field =>
+	{
+		fragments.push(...parseField(field, messageResolver, headingLevel));
+	});
+	
+	return fragments;
+}
+
+function parseGroups(groups: Array<FieldsGroup>, messageResolver: PathMessageResolver): Array<Fragment>
 {
 	return [];
 }
@@ -73,7 +100,7 @@ function toPage(page: SimplePage, fragments: Array<Fragment>)
 
 export class SimpleEntityParser implements EntityParser
 {
-	parse(entityCandidate: any | EntitySchema, path: string): Page
+	parse(entityCandidate: any | EntitySchema, path: string, messageResolver: PathMessageResolver): Page
 	{
 		if(typeof entityCandidate !== 'object')
 			throw new Error('Entity should be object type');
@@ -112,10 +139,10 @@ export class SimpleEntityParser implements EntityParser
 			page.add(new Paragraph(entityCandidate.description));
 		
 		if(Array.isArray(entityCandidate.fields))
-			toPage(page, parseFields(entityCandidate.fields));
+			toPage(page, parseFields(entityCandidate.fields, messageResolver));
 		
 		if(Array.isArray(entityCandidate.groups))
-			toPage(page, parseGroups(entityCandidate.groups));
+			toPage(page, parseGroups(entityCandidate.groups, messageResolver));
 		
 		if(entityCandidate.postDescription)
 			page.add(new Paragraph(entityCandidate.postDescription));

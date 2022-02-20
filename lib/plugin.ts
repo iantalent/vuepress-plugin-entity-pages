@@ -1,16 +1,23 @@
+import {EntityParser} from "./parser";
+import {MessageResolver, PluginMessages} from "./messages";
 import {Context} from '@vuepress/types';
 import {glob} from 'glob';
 import path from "path";
-import {EntityParser, SimpleEntityParser} from "./parser";
+import {EntityBuilder} from "./builder";
 
 type PluginOptions = {
 	parser?: EntityParser,
+	messageResolver?: MessageResolver,
+	messages?: PluginMessages
 }
 
 export default (options: PluginOptions, ctx: Context) =>
 {
-	
-	const parser = options.parser || new SimpleEntityParser();
+	const builder = new EntityBuilder({
+		parser: options.parser,
+		messageResolver: options.messageResolver,
+		messages: options.messages
+	});
 	
 	console.log(ctx.sourceDir, path.join(ctx.sourceDir, '**.entity.json'));
 	const entites = glob.sync(
@@ -21,6 +28,12 @@ export default (options: PluginOptions, ctx: Context) =>
 	
 	return {
 		name: 'vuepress-plugin-entity-pages',
-		
+		themeConfig: {
+			locales: {
+				entityPages: {
+					fieldType: 'Type'
+				}
+			}
+		}
 	}
 }

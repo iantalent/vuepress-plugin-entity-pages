@@ -1,8 +1,8 @@
 import {suite, test} from '@testdeck/mocha';
 import * as chai from 'chai';
-import {SimpleEntityParser} from "../lib/parser";
 import {Heading, Paragraph} from "markdown-generator";
 import {Page} from "vuepress-plugin-custom-pages";
+import {EntityBuilder} from "../lib/builder";
 
 const assert = chai.assert;
 
@@ -13,9 +13,9 @@ class EntityPagesTests
 	
 	before()
 	{
-		const parser = new SimpleEntityParser();
+		const builder = new EntityBuilder();
 		
-		this.page = parser.parse({
+		this.page = builder.build({
 			name: 'Test entity',
 			description: 'Test description',
 			lang: 'ru_RU',
