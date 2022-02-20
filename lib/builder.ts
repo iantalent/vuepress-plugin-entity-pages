@@ -16,14 +16,13 @@ export class EntityBuilder
 {
 	private readonly parser: EntityParser;
 	private readonly messageResolver: MessageResolver;
-	private readonly messages: PluginMessages;
 	
 	constructor(options?: BuilderOptions)
 	{
 		const safeOptions = options || {};
 		this.parser = safeOptions.parser || new SimpleEntityParser();
 		this.messageResolver = safeOptions.messageResolver || new SimpleMessageResolver();
-		this.messages = Object.assign({}, defaultMessages, safeOptions.messages);
+		this.messageResolver.add(Object.assign({}, defaultMessages, safeOptions.messages));
 	}
 	
 	build(entity: any, path: string): Page

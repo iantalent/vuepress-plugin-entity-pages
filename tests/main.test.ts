@@ -1,6 +1,6 @@
 import {suite, test} from '@testdeck/mocha';
 import * as chai from 'chai';
-import {Heading, Paragraph} from "markdown-generator";
+import {Heading, Paragraph, UnorderedList} from "markdown-generator";
 import {Page} from "vuepress-plugin-custom-pages";
 import {EntityBuilder} from "../lib/builder";
 
@@ -27,7 +27,13 @@ class EntityPagesTests
 				additional: [
 					{name: 'keywords', content: 'keyword'}
 				]
-			}
+			},
+			fields: [
+				{
+					name: 'name',
+					type: 'string'
+				}
+			]
 		}, '/path/');
 	}
 	
@@ -63,7 +69,10 @@ class EntityPagesTests
 	{
 		assert.deepEqual(this.page.tree(), [
 			new Heading('Test entity', 1),
-			new Paragraph('Test description')
+			new Paragraph('Test description'),
+			new Heading('name', 2),
+			(new UnorderedList())
+				.add('Type: `string`')
 		])
 	}
 }
